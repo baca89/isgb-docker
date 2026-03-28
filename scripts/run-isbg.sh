@@ -30,7 +30,9 @@ ini_get() {
         | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
 }
 
-log "=== Starte Mailbox-Spam-Check ==="
+# isbg-Version beim Start loggen (hilft bei Diagnose)
+ISBG_VERSION=$(isbg --version 2>&1 || echo "unbekannt")
+log "=== Starte Mailbox-Spam-Check (isbg: ${ISBG_VERSION}) ==="
 
 processed=0
 errors=0
@@ -68,10 +70,7 @@ for conf in "${CONFIG_DIR}"/*.conf; do
         "--imapuser"    "$username"
         "--imappasswd"  "$password"
         "--spamfolder"  "${spam_folder:-Spam}"
-        "--maxsize"     "400"
-        "--spamc"
-        "--noreport"
-        "--ignorelockfile"
+        "--maxsize"     "400000"
     )
 
     [ "${use_ssl:-true}" != "false" ] && ISBG_ARGS+=("--ssl")
@@ -86,6 +85,10 @@ for conf in "${CONFIG_DIR}"/*.conf; do
         ISBG_ARGS+=("--learnspambox" "$spam_learn_folder")
         log "  Spam-Lernordner: ${spam_learn_folder}"
     fi
+
+    # Exaktes Kommando loggen (Passwort ausgeblendet) für einfachere Fehleranalyse
+    log_args=("${ISBG_ARGS[@]//${password}/***}")
+    log "  Kommando: isbg ${log_args[*]}"
 
     box_log="${LOG_DIR}/${name}.log"
     if isbg "${ISBG_ARGS[@]}" >> "${box_log}" 2>&1; then

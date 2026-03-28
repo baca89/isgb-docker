@@ -83,7 +83,7 @@ case "${1:-start}" in
             exit 1
         fi
         log_info "spamd gefunden: ${SPAMD_BIN}"
-        if "${SPAMD_BIN}" --daemonize --pidfile=/var/run/spamd.pid --max-children=5; then
+        if "${SPAMD_BIN}" --daemonize --pidfile=/var/run/spamd.pid --max-children=5 --local --syslog=stderr; then
             log_info "SpamAssassin Daemon gestartet."
         else
             log_error "SpamAssassin Daemon konnte nicht gestartet werden!"
