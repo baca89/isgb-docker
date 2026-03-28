@@ -5,7 +5,7 @@
 # Konfiguration pro Mailbox: /etc/isgb/mailboxes/<name>.conf
 # Relevante Schlüssel:
 #   [connection]  host, port, username, auth_secret, use_ssl
-#   [actions]     move_to_folder, ham_folder, spam_learn_folder
+#   [actions]     move_to_folder|spaminbox, ham_folder, spam_learn_folder
 
 set -uo pipefail
 
@@ -50,7 +50,8 @@ for conf in "${CONFIG_DIR}"/*.conf; do
     username=$(ini_get "$conf" "username")
     password=$(ini_get "$conf" "auth_secret")
     use_ssl=$(ini_get "$conf" "use_ssl")
-    spam_folder=$(ini_get "$conf" "move_to_folder")
+    spam_folder=$(ini_get "$conf" "spaminbox")
+    [ -z "$spam_folder" ] && spam_folder=$(ini_get "$conf" "move_to_folder")
     ham_folder=$(ini_get "$conf" "ham_folder")
     spam_learn_folder=$(ini_get "$conf" "spam_learn_folder")
 
@@ -69,11 +70,11 @@ for conf in "${CONFIG_DIR}"/*.conf; do
         "--imapport"    "${port:-993}"
         "--imapuser"    "$username"
         "--imappasswd"  "$password"
-        "--spamfolder"  "${spam_folder:-Spam}"
+        "--spaminbox"   "${spam_folder:-INBOX.Spam}"
         "--maxsize"     "400000"
     )
 
-    [ "${use_ssl:-true}" != "false" ] && ISBG_ARGS+=("--ssl")
+    [ "${use_ssl:-true}" = "false" ] && ISBG_ARGS+=("--nossl")
 
     if [ -n "$ham_folder" ]; then
         # Mails in ham_folder als Ham lernen (False-Positive-Korrektur)
