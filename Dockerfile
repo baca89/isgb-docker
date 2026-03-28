@@ -21,11 +21,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Erstelle Arbeitsverzeichnis
 WORKDIR /opt/isgb
 
-# Klone oder installiere isGB
-# Ersetze mit der tatsÃ¤chlichen isGB-Installation
+# Installiere isGB via pip (PEP 668: --break-system-packages ist in Docker-Containern korrekt)
 # hadolint ignore=DL3013
-RUN git clone https://github.com/baca89/isgb.git . || \
-    pip3 install --no-cache-dir isgb
+RUN pip3 install --no-cache-dir --break-system-packages isgb
 
 # Erstelle Config-Verzeichnis mit korrekten Berechtigungen
 RUN mkdir -p /etc/isgb/mailboxes && \
