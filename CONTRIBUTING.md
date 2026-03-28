@@ -88,7 +88,7 @@ Proposed solution:
   - Health Checks definieren
   - Keine Root-User
 
-- **Bash-Skripte**: 
+- **Bash-Skripte**:
   - ShellCheck verwenden
   - Mit `set -e` beginnen
   - Fehlerbehandlung
