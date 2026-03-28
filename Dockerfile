@@ -1,10 +1,11 @@
 # isGB Spamfilter Docker Image
 FROM debian:bookworm-slim
 
-LABEL maintainer="your-email@example.com"
+LABEL maintainer="isbg@bauerc.eu"
 LABEL description="Docker image for isGB spam filter with multi-mailbox support"
 
 # Installiere erforderliche Pakete
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
@@ -22,8 +23,9 @@ WORKDIR /opt/isgb
 
 # Klone oder installiere isGB
 # Ersetze mit der tatsächlichen isGB-Installation
+# hadolint ignore=DL3013
 RUN git clone https://github.com/your-username/isgb.git . || \
-    pip3 install isgb
+    pip3 install --no-cache-dir isgb
 
 # Erstelle Config-Verzeichnis mit korrekten Berechtigungen
 RUN mkdir -p /etc/isgb/mailboxes && \
