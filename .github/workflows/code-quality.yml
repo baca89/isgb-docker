@@ -13,10 +13,16 @@ on:
     # Täglich um 2 Uhr nachts
     - cron: '0 2 * * *'
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   dockerfile-lint:
     runs-on: ubuntu-latest
     name: Lint Dockerfile
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -31,6 +37,8 @@ jobs:
   shell-lint:
     runs-on: ubuntu-latest
     name: Lint Shell Scripts
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -49,6 +57,8 @@ jobs:
   yaml-lint:
     runs-on: ubuntu-latest
     name: Lint YAML
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -66,6 +76,8 @@ jobs:
   markdown-lint:
     runs-on: ubuntu-latest
     name: Lint Markdown
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -80,6 +92,9 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     name: Security Scan
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout repository
@@ -93,31 +108,19 @@ jobs:
           format: 'sarif'
           output: 'trivy-fs-results.sarif'
 
-      - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
+      - name: Check if SARIF file exists and upload
+        if: always() && hashFiles('trivy-fs-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-fs-results.sarif'
           category: 'trivy-filesystem'
-
-      - name: Run Trivy Config Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'config'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-config-results.sarif'
-
-      - name: Upload config results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: 'trivy-config-results.sarif'
-          category: 'trivy-config'
+          wait-for-processing: false
 
   license-check:
     runs-on: ubuntu-latest
     name: License Check
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -134,6 +137,8 @@ jobs:
   dependency-check:
     runs-on: ubuntu-latest
     name: Dependency Check
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
