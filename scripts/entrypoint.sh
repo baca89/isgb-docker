@@ -74,6 +74,25 @@ case "${1:-start}" in
         log_info "Starte isGB Spamfilter..."
         
         # Validiere alle Config-Dateien
+        # Starte SpamAssassin Daemon
+        log_info "Starte SpamAssassin Daemon (spamd)..."
+        if /usr/sbin/spamd --daemonize --pidfile=/var/run/spamd.pid --max-children=5; then
+            log_info "SpamAssassin Daemon gestartet."
+        else
+            log_error "SpamAssassin Daemon konnte nicht gestartet werden!"
+            exit 1
+        fi
+
+        # Starte Cron für täglichen Lernlauf (täglich 02:00 Uhr)
+        log_info "Starte Cron-Daemon für täglichen Lernlauf..."
+        cron
+        log_info "Cron-Daemon gestartet."
+
+        # Initialer SpamAssassin Lernlauf beim Containerstart
+        log_info "Führe initialen SpamAssassin Lernlauf durch..."
+        /usr/local/bin/sa-learn.sh || log_warn "Lernlauf: Noch keine Lerndaten vorhanden."
+
+        # Validiere alle Config-Dateien
         log_info "Validiere Config-Dateien..."
         for config_file in "$CONFIG_DIR"/*.conf; do
             if [ -f "$config_file" ]; then
@@ -83,9 +102,11 @@ case "${1:-start}" in
         done
         
         log_info "isGB gestartet mit $CONFIG_COUNT Postfächern"
+        log_info "SpamAssassin: aktiv | Lernlauf: täglich 02:00 Uhr + beim Start"
         log_info "Logs unter: $LOG_DIR"
         
         # Starte isGB (Platzhalter - anpassen je nach tatsächlicher isGB-Implementierung)
+        # isbg --imaphost <host> --imapuser <user> --imappassword <pw> --spamfolder Spam
         # python3 /opt/isgb/isgb.py --config-dir "$CONFIG_DIR" --log-dir "$LOG_DIR"
         
         # Für Demo: einfach am Laufen halten

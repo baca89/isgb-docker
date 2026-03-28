@@ -16,28 +16,33 @@ services:
       - isgb-logs:/var/log/isgb
       # Persistente Datenbank
       - isgb-data:/var/lib/isgb
+      # SpamAssassin Bayes-Datenbank (persistent)
+      - isgb-sa-bayes:/root/.spamassassin
+      # Optional: Lernverzeichnisse mit mbox/maildir-Dateien befüllen
+      # - ./spam-learn:/var/lib/isgb/spam:ro
+      # - ./ham-learn:/var/lib/isgb/ham:ro
 
     # Umgebungsvariablen
     environment:
       CONFIG_DIR: /etc/isgb/mailboxes
       LOG_DIR: /var/log/isgb
       LOG_LEVEL: INFO
-      # Ersetze mit deinen Einstellungen
       # TZ: Europe/Berlin
+      # Optionale SpamAssassin Lernpfade (Standard: /var/lib/isgb/spam|ham)
+      # SA_SPAM_DIR: /var/lib/isgb/spam
+      # SA_HAM_DIR: /var/lib/isgb/ham
 
-    # Ports (anpassen je nach isGB-Konfiguration)
-    ports:
-      - "8080:8080"  # API/Web-Interface
-      # - "110:110"   # POP3 (optional)
-      # - "143:143"   # IMAP (optional)
+    # Ports (spamd läuft intern auf Port 783, kein externer Zugriff benötigt)
+    # ports:
+    #   - "783:783"   # SpamAssassin spamd (nur bei externem Zugriff nötig)
 
     # Health Check
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
+      test: ["CMD-SHELL", "test -s /var/run/spamd.pid"]
+      interval: 60s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 30s
 
     # Resource-Limits
     deploy:
@@ -57,6 +62,8 @@ volumes:
   isgb-logs:
     driver: local
   isgb-data:
+      isgb-sa-bayes:
+        driver: local
     driver: local
 
 networks:
