@@ -1,34 +1,28 @@
 {
   "default": true,
   "line-length": {
-    "line_length": 120,
-    "heading_line_length": 120,
+    "line_length": 140,
+    "heading_line_length": 140,
     "code_blocks": false,
     "code_lines": false,
-    "headers": true,
-    "headers_length": 120,
-    "strict": false,
-    "stern": false
+    "headers": false,
+    "strict": false
   },
   "no-hard-tabs": true,
-  "no-trailing-spaces": true,
+  "no-trailing-spaces": {
+    "br_count": 2
+  },
   "no-multiple-blanks": {
     "maximum": 2
   },
-  "no-missing-space-atx": true,
-  "blanks-around-headings": true,
-  "blanks-around-lists": true,
+  "blanks-around-headings": {
+    "lines_above": 1,
+    "lines_below": 0
+  },
+  "blanks-around-lists": false,
+  "blanks-around-fences": false,
+  "fenced-code-language": false,
   "no-inline-html": false,
-  "proper-names": {
-    "names": [
-      "Docker",
-      "GitHub",
-      "isGB",
-      "Gmail",
-      "Outlook",
-      "Ubuntu",
-      "Debian",
-      "CentOS"
-    ]
-  }
+  "proper-names": false,
+  "no-missing-space-atx": true
 }
