@@ -27,7 +27,7 @@ WORKDIR /opt/isgb
 
 # Installiere isGB via pip (PEP 668: --break-system-packages ist in Docker-Containern korrekt)
 # hadolint ignore=DL3013
-RUN pip3 install --no-cache-dir --break-system-packages isgb
+RUN pip3 install --no-cache-dir --break-system-packages isgb isbg
 
 # SpamAssassin: Verzeichnisse und täglicher Lernlauf via Cron
 RUN mkdir -p /root/.spamassassin /var/lib/isgb/spam /var/lib/isgb/ham /var/log/isgb \
@@ -41,8 +41,8 @@ RUN mkdir -p /etc/isgb/mailboxes && \
     chmod 755 /etc/isgb/mailboxes
 
 # Kopiere Skripte
-COPY scripts/entrypoint.sh scripts/sa-learn.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/sa-learn.sh
+COPY scripts/entrypoint.sh scripts/sa-learn.sh scripts/run-isbg.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/sa-learn.sh /usr/local/bin/run-isbg.sh
 
 # Volume-Mount-Punkte (Configs, persistente Daten, SpamAssassin Bayes-DB)
 VOLUME ["/etc/isgb/mailboxes", "/var/lib/isgb", "/root/.spamassassin"]

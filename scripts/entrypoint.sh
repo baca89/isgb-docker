@@ -110,14 +110,15 @@ case "${1:-start}" in
         
         log_info "isGB gestartet mit $CONFIG_COUNT Postfächern"
         log_info "SpamAssassin: aktiv | Lernlauf: täglich 02:00 Uhr + beim Start"
+        log_info "Mailbox-Check: alle ${IMAP_CHECK_INTERVAL:-900}s (konfigurierbar via IMAP_CHECK_INTERVAL)"
         log_info "Logs unter: $LOG_DIR"
-        
-        # Starte isGB (Platzhalter - anpassen je nach tatsächlicher isGB-Implementierung)
-        # isbg --imaphost <host> --imapuser <user> --imappassword <pw> --spamfolder Spam
-        # python3 /opt/isgb/isgb.py --config-dir "$CONFIG_DIR" --log-dir "$LOG_DIR"
-        
-        # Für Demo: einfach am Laufen halten
-        tail -f /dev/null
+
+        # Starte Mailbox-Check-Loop: isbg prüft alle konfigurierten Postfächer
+        log_info "Starte Mailbox-Check-Daemon..."
+        while true; do
+            /usr/local/bin/run-isbg.sh || log_warn "Mailbox-Check schlug fehl – Details: $LOG_DIR/isbg.log"
+            sleep "${IMAP_CHECK_INTERVAL:-900}"
+        done
         ;;
     
     validate)

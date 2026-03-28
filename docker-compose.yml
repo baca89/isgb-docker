@@ -31,6 +31,8 @@ services:
       # Optionale SpamAssassin Lernpfade (Standard: /var/lib/isgb/spam|ham)
       # SA_SPAM_DIR: /var/lib/isgb/spam
       # SA_HAM_DIR: /var/lib/isgb/ham
+      # Intervall für Mailbox-Check in Sekunden (Standard: 900 = 15 Minuten)
+      # IMAP_CHECK_INTERVAL: 900
 
     # Ports (spamd läuft intern auf Port 783, kein externer Zugriff benötigt)
     # ports:
