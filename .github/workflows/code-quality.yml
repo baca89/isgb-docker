@@ -1,0 +1,162 @@
+name: Code Quality & Linting
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  schedule:
+    # Täglich um 2 Uhr nachts
+    - cron: '0 2 * * *'
+
+jobs:
+  dockerfile-lint:
+    runs-on: ubuntu-latest
+    name: Lint Dockerfile
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          failure-threshold: warning
+
+  shell-lint:
+    runs-on: ubuntu-latest
+    name: Lint Shell Scripts
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck
+        run: |
+          find . -name "*.sh" -type f | while read file; do
+            echo "Checking $file..."
+            shellcheck "$file" || exit 1
+          done
+
+  yaml-lint:
+    runs-on: ubuntu-latest
+    name: Lint YAML
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Run yamllint
+        run: |
+          yamllint -c "{extends: default, rules: {line-length: {max: 120}}}" \
+            .github/workflows/*.yml \
+            docker-compose.yml
+
+  markdown-lint:
+    runs-on: ubuntu-latest
+    name: Lint Markdown
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Markdownlint
+        uses: nosborn/github-action-markdown-cli@v3.3.0
+        with:
+          files: .
+          config_file: .markdownlintrc
+
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Security Scan
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy Filesystem Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-fs-results.sarif'
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-fs-results.sarif'
+          category: 'trivy-filesystem'
+
+      - name: Run Trivy Config Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-config-results.sarif'
+
+      - name: Upload config results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-config-results.sarif'
+          category: 'trivy-config'
+
+  license-check:
+    runs-on: ubuntu-latest
+    name: License Check
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check License
+        run: |
+          if [ ! -f LICENSE ]; then
+            echo "LICENSE file missing!"
+            exit 1
+          fi
+          echo "✓ LICENSE file found"
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    name: Dependency Check
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Dockerfile for outdated base images
+        run: |
+          echo "Checking Debian version in Dockerfile..."
+          grep -i "FROM debian:" Dockerfile
+          echo "Note: Ensure using latest stable version"
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Scanning for hardcoded secrets..."
+          if grep -r "password\|secret\|key\|token" . \
+            --include="*.sh" \
+            --include="*.py" \
+            --include="Dockerfile" \
+            --exclude-dir=.git \
+            --exclude-dir=.github \
+            --exclude-dir=config \
+            --exclude="*.md"; then
+            echo "⚠️  Potential hardcoded secrets found!"
+            exit 1
+          fi
+          echo "✓ No suspicious hardcoded secrets found"

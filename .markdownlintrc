@@ -1,0 +1,34 @@
+{
+  "default": true,
+  "line-length": {
+    "line_length": 120,
+    "heading_line_length": 120,
+    "code_blocks": false,
+    "code_lines": false,
+    "headers": true,
+    "headers_length": 120,
+    "strict": false,
+    "stern": false
+  },
+  "no-hard-tabs": true,
+  "no-trailing-spaces": true,
+  "no-multiple-blanks": {
+    "maximum": 2
+  },
+  "no-missing-space-atx": true,
+  "blanks-around-headings": true,
+  "blanks-around-lists": true,
+  "no-inline-html": false,
+  "proper-names": {
+    "names": [
+      "Docker",
+      "GitHub",
+      "isGB",
+      "Gmail",
+      "Outlook",
+      "Ubuntu",
+      "Debian",
+      "CentOS"
+    ]
+  }
+}

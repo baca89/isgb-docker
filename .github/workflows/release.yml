@@ -1,0 +1,82 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      discussions: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          CHANGELOG=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %h %s (%ae)")
+          
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="Initial release"
+          fi
+          
+          # Speichere Changelog in eine Datei für die Release-Beschreibung
+          echo "${CHANGELOG}" > /tmp/changelog.txt
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/changelog.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: Release ${{ steps.version.outputs.version }}
+          body: |
+            ## Changes
+            ${{ steps.changelog.outputs.changelog }}
+
+            ## Docker Image
+            Diese Version ist verfügbar unter:
+            ```
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+            ```
+
+            ## Installation
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+            ```
+          draft: false
+          prerelease: false
+
+      - name: Comment on discussion
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            console.log('Release ${{ steps.version.outputs.version }} created successfully!');

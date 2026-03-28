@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  isgb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: isgb-spamfilter
+    restart: unless-stopped
+    
+    # Volumes
+    volumes:
+      # Config-Verzeichnis mit Mailbox-Konfigurationen
+      - ./config:/etc/isgb/mailboxes:ro
+      # Logs
+      - isgb-logs:/var/log/isgb
+      # Persistente Datenbank
+      - isgb-data:/var/lib/isgb
+    
+    # Umgebungsvariablen
+    environment:
+      CONFIG_DIR: /etc/isgb/mailboxes
+      LOG_DIR: /var/log/isgb
+      LOG_LEVEL: INFO
+      # Ersetze mit deinen Einstellungen
+      # TZ: Europe/Berlin
+    
+    # Ports (anpassen je nach isGB-Konfiguration)
+    ports:
+      - "8080:8080"  # API/Web-Interface
+      # - "110:110"   # POP3 (optional)
+      # - "143:143"   # IMAP (optional)
+    
+    # Health Check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    # Resource-Limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Netzwerk
+    networks:
+      - isgb-network
+
+volumes:
+  isgb-logs:
+    driver: local
+  isgb-data:
+    driver: local
+
+networks:
+  isgb-network:
+    driver: bridge
