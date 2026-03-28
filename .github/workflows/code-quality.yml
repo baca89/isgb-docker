@@ -1,4 +1,4 @@
-name: Code Quality & Linting
+﻿name: Code Quality & Linting
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
       - main
       - develop
   schedule:
-    # Täglich um 2 Uhr nachts
+    # TÃ¤glich um 2 Uhr nachts
     - cron: '0 2 * * *'
 
 permissions:
@@ -129,7 +129,7 @@ jobs:
             echo "LICENSE file missing!"
             exit 1
           fi
-          echo "✓ LICENSE file found"
+          echo "âœ“ LICENSE file found"
 
   dependency-check:
     runs-on: ubuntu-latest
@@ -150,7 +150,7 @@ jobs:
       - name: Check for hardcoded secrets
         run: |
           echo "Scanning for hardcoded secrets..."
-          # Suche nach echten Passwörtern/Secrets, nicht nach Platzhaltern oder Beispielen
+          # Suche nach echten PasswÃ¶rtern/Secrets, nicht nach Platzhaltern oder Beispielen
           if grep -r "password\|secret\|key\|token" . \
             --include="*.sh" \
             --include="*.py" \
@@ -160,7 +160,7 @@ jobs:
             --exclude-dir=config \
             --exclude="*.md" \
             | grep -v "\[.*_HERE\]\|\[REPLACE_WITH\|your_\|example\|demo\|test\|#" ; then
-            echo "⚠️  Potential hardcoded secrets found!"
+            echo "âš ï¸  Potential hardcoded secrets found!"
             exit 1
           fi
-          echo "✓ No suspicious hardcoded secrets found"
+          echo "âœ“ No suspicious hardcoded secrets found"

@@ -1,4 +1,4 @@
-name: Create Release
+﻿name: Create Release
 
 on:
   push:
@@ -39,12 +39,12 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           CHANGELOG=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %h %s (%ae)")
-          
+
           if [ -z "$CHANGELOG" ]; then
             CHANGELOG="Initial release"
           fi
-          
-          # Speichere Changelog in eine Datei für die Release-Beschreibung
+
+          # Speichere Changelog in eine Datei fÃ¼r die Release-Beschreibung
           echo "${CHANGELOG}" > /tmp/changelog.txt
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           cat /tmp/changelog.txt >> $GITHUB_OUTPUT
@@ -62,7 +62,7 @@ jobs:
             ${{ steps.changelog.outputs.changelog }}
 
             ## Docker Image
-            Diese Version ist verfügbar unter:
+            Diese Version ist verfÃ¼gbar unter:
             ```
             ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
             ```
