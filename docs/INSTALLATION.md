@@ -1,10 +1,10 @@
-# Installationsanleitung - isGB Docker
+﻿# Installationsanleitung - isGB Docker
 
 ## Systemanforderungen
 
 - Docker-Engine >= 20.10
 - Docker Compose >= 1.29 (optional, aber empfohlen)
-- Mindestens 2GB RAM verfügbar
+- Mindestens 2GB RAM verfÃ¼gbar
 - Mindestens 2 CPU-Kerne
 - 10GB freier Festplattenspeicher
 
@@ -24,10 +24,10 @@
 # Alte Docker-Versionen deinstallieren
 sudo apt-get remove docker docker-engine docker.io containerd runc
 
-# Repository-Schlüssel hinzufügen
+# Repository-SchlÃ¼ssel hinzufÃ¼gen
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-# Repository hinzufügen
+# Repository hinzufÃ¼gen
 echo \
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -40,7 +40,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plu
 ### CentOS / RHEL
 
 ```bash
-# Repository hinzufügen
+# Repository hinzufÃ¼gen
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
@@ -52,15 +52,15 @@ sudo systemctl enable docker
 
 ### Windows
 
-1. [Docker Desktop für Windows](https://docs.docker.com/desktop/install/windows-install/) herunterladen
-2. Installer ausführen
+1. [Docker Desktop fÃ¼r Windows](https://docs.docker.com/desktop/install/windows-install/) herunterladen
+2. Installer ausfÃ¼hren
 3. Nach Neustart Docker Desktop starten
 4. WSL2 Backend ist empfohlen
 
 ### macOS
 
-1. [Docker Desktop für Mac](https://docs.docker.com/desktop/install/mac-install/) herunterladen
-2. .dmg öffnen und in Applications verschieben
+1. [Docker Desktop fÃ¼r Mac](https://docs.docker.com/desktop/install/mac-install/) herunterladen
+2. .dmg Ã¶ffnen und in Applications verschieben
 3. Docker Desktop starten
 
 ## Repository vorbereiten
@@ -68,14 +68,14 @@ sudo systemctl enable docker
 ### 1. Repository klonen
 
 ```bash
-git clone https://github.com/your-username/isgb-docker.git
+git clone https://github.com/baca89/isgb-docker.git
 cd isgb-docker
 ```
 
 ### 2. Verzeichnisstruktur erstellen
 
 ```bash
-# Konfiguration für Postfächer
+# Konfiguration fÃ¼r PostfÃ¤cher
 mkdir -p config
 mkdir -p logs
 mkdir -p data
@@ -99,10 +99,10 @@ docker ps
 ### Step 1: Beispiel-Config kopieren
 
 ```bash
-# Für erstes Postfach
+# FÃ¼r erstes Postfach
 cp config/example.conf config/user1@example.com.conf
 
-# Für weitere Postfächer (optional)
+# FÃ¼r weitere PostfÃ¤cher (optional)
 cp config/example.conf config/user2@example.com.conf
 ```
 
@@ -131,7 +131,7 @@ use_ssl = true
 
 #### Gmail
 
-1. [Google Account Security](https://myaccount.google.com/security) öffnen
+1. [Google Account Security](https://myaccount.google.com/security) Ã¶ffnen
 2. 2-Faktor-Authentifizierung aktivieren
 3. [App-Passwort](https://myaccount.google.com/apppasswords) generieren
 4. Dieses Passwort in der Config verwenden
@@ -147,7 +147,7 @@ use_ssl = true
 
 #### Outlook / Office 365
 
-1. [Microsoft Account Security](https://account.microsoft.com/security) öffnen
+1. [Microsoft Account Security](https://account.microsoft.com/security) Ã¶ffnen
 2. App-Passwort generieren (falls 2FA aktiviert)
 3. Konfigurieren
 
@@ -182,11 +182,11 @@ docker-compose build
 # Container starten
 docker-compose up -d
 
-# Logs überprüfen
+# Logs Ã¼berprÃ¼fen
 docker-compose logs -f
 ```
 
-### Überprüfung
+### ÃœberprÃ¼fung
 
 ```bash
 # Container-Status
@@ -224,7 +224,7 @@ docker run -d \
 ### Schritt 3: Verifyierung
 
 ```bash
-# Container läuft?
+# Container lÃ¤uft?
 docker ps -a | grep isgb-spamfilter
 
 # Logs
@@ -258,7 +258,7 @@ git pull origin main
 # Image neu bauen
 docker build -t isgb:latest . --no-cache
 
-# Alten Container stoppen und löschen
+# Alten Container stoppen und lÃ¶schen
 docker stop isgb-spamfilter
 docker rm isgb-spamfilter
 
@@ -274,13 +274,13 @@ docker run -d \
   isgb:latest
 ```
 
-## Häufige Probleme
+## HÃ¤ufige Probleme
 
-### Docker-Daemon läuft nicht
+### Docker-Daemon lÃ¤uft nicht
 
 **Problem**: `Cannot connect to the Docker daemon`
 
-**Lösung**:
+**LÃ¶sung**:
 ```bash
 # Linux
 sudo systemctl start docker
@@ -289,14 +289,14 @@ sudo systemctl start docker
 # Starte Docker Desktop aus Applications
 
 # Windows
-# Starte Docker Desktop aus Start-Menü
+# Starte Docker Desktop aus Start-MenÃ¼
 ```
 
 ### Permission Denied
 
 **Problem**: `Permission denied while trying to connect to Docker daemon`
 
-**Lösung** (Linux):
+**LÃ¶sung** (Linux):
 ```bash
 sudo usermod -aG docker $USER
 newgrp docker
@@ -306,13 +306,13 @@ newgrp docker
 
 **Problem**: Container crasht, weil keine `.conf` gefunden
 
-**Lösung**:
+**LÃ¶sung**:
 ```bash
-# Config-Dateien überprüfen
+# Config-Dateien Ã¼berprÃ¼fen
 ls -la config/
 ls -la config/*.conf
 
-# Config-Volume überprüfen
+# Config-Volume Ã¼berprÃ¼fen
 docker-compose exec isgb ls /etc/isgb/mailboxes/
 ```
 
@@ -320,20 +320,20 @@ docker-compose exec isgb ls /etc/isgb/mailboxes/
 
 **Problem**: Container wird beendet, zu wenig RAM
 
-**Lösung**:
+**LÃ¶sung**:
 ```bash
-# Container-Speicher erhöhen
+# Container-Speicher erhÃ¶hen
 docker-compose.yml anpassen:
 deploy:
   resources:
     limits:
-      memory: 4G  # Erhöht von 2G
+      memory: 4G  # ErhÃ¶ht von 2G
 ```
 
-## Nächste Schritte
+## NÃ¤chste Schritte
 
 1. [Konfigurationsanleitung](CONFIGURATION.md) lesen
-2. [Performance-Tuning](PERFORMANCE.md) durchführen
+2. [Performance-Tuning](PERFORMANCE.md) durchfÃ¼hren
 3. [Monitoring](MONITORING.md) aufsetzen
 
 ## Support

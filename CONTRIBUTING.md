@@ -1,6 +1,6 @@
-# Beitragen zu isGB Docker
+﻿# Beitragen zu isGB Docker
 
-Danke dass du zu diesem Projekt beitragen möchtest! Hier ist eine Anleitung wie du helfen kannst.
+Danke dass du zu diesem Projekt beitragen mÃ¶chtest! Hier ist eine Anleitung wie du helfen kannst.
 
 ## Code of Conduct
 
@@ -10,7 +10,7 @@ Dieses Projekt unterliegt unserem [Code of Conduct](CODE_OF_CONDUCT.md). Durch d
 
 ### 1. Bugs melden
 
-Hast du einen Bug gefunden? Erstelle ein [GitHub Issue](https://github.com/your-username/isgb-docker/issues) mit:
+Hast du einen Bug gefunden? Erstelle ein [GitHub Issue](https://github.com/baca89/isgb-docker/issues) mit:
 
 - **Titel**: Klare, kurze Beschreibung
 - **Beschreibung**: Was ist das Problem?
@@ -42,16 +42,16 @@ Environment:
 
 ### 2. Features vorschlagen
 
-Hast du einer Idee für ein neues Feature? Erstelle ein [GitHub Issue](https://github.com/your-username/isgb-docker/issues) mit Tag `enhancement`:
+Hast du einer Idee fÃ¼r ein neues Feature? Erstelle ein [GitHub Issue](https://github.com/baca89/isgb-docker/issues) mit Tag `enhancement`:
 
 ```
-Title: Feature: Support für Redis-Cache
+Title: Feature: Support fÃ¼r Redis-Cache
 
 Description:
-Für bessere Performance könnte isGB Redis für Caching nutzen...
+FÃ¼r bessere Performance kÃ¶nnte isGB Redis fÃ¼r Caching nutzen...
 
 Proposed solution:
-- Environment-Variable `REDIS_URL` hinzufügen
+- Environment-Variable `REDIS_URL` hinzufÃ¼gen
 - Cache-Konfiguration in der Config-Datei
 ```
 
@@ -66,11 +66,11 @@ Proposed solution:
 
 2. **Clone deinen Fork**
    ```bash
-   git clone https://github.com/your-username/isgb-docker.git
+   git clone https://github.com/baca89/isgb-docker.git
    cd isgb-docker
    ```
 
-3. **Remote upstream hinzufügen**
+3. **Remote upstream hinzufÃ¼gen**
    ```bash
    git remote add upstream https://github.com/original-owner/isgb-docker.git
    ```
@@ -84,7 +84,7 @@ Proposed solution:
 
 - **Dockerfile**: Folge Best Practices
   - Nutze offizielle Base-Images
-  - Multi-stage Builds für kleinere Images
+  - Multi-stage Builds fÃ¼r kleinere Images
   - Health Checks definieren
   - Keine Root-User
 
@@ -96,18 +96,18 @@ Proposed solution:
 
 - **YAML (GitHub Actions)**:
   - Proper Indentation (2 Spaces)
-  - Verständliche Step-Namen
-  - Kommentare für komplexe Logik
+  - VerstÃ¤ndliche Step-Namen
+  - Kommentare fÃ¼r komplexe Logik
 
 - **Dokumentation**:
   - Markdown-Formatierung
-  - Klare, prägnante Sprache
+  - Klare, prÃ¤gnante Sprache
   - Code-Beispiele
   - Links zu relevanter Dokumentation
 
 #### Commits
 
-1. **Commits regelmäßig machen**
+1. **Commits regelmÃ¤ÃŸig machen**
    ```bash
    git add .
    git commit -m "feat: Add Redis cache support"
@@ -146,7 +146,7 @@ Proposed solution:
 
 1. **PR auf GitHub erstellen**
    - GitHub wird dir einen PR erstellen Button anzeigen
-   - Beschreibe deine Änderungen
+   - Beschreibe deine Ã„nderungen
    - Referenziere relevante Issues (#123)
 
 2. **PR-Description-Template**
@@ -164,7 +164,7 @@ Proposed solution:
    - [ ] Documentation update
 
    ## How Has This Been Tested?
-   Beschreibe wie du die Änderungen getestet hast
+   Beschreibe wie du die Ã„nderungen getestet hast
 
    ## Checklist
    - [ ] Code folgt dem Style Guide
@@ -198,21 +198,21 @@ Dokumentation ist Code! Hilf dabei:
 ## Review Process
 
 1. **Automatische Checks**
-   - GitHub Actions Workflows müssen passen
+   - GitHub Actions Workflows mÃ¼ssen passen
    - Linting must pass
-   - Tests müssen erfolgreich sein
+   - Tests mÃ¼ssen erfolgreich sein
 
 2. **Code Review**
    - Mindestens ein Maintainer muss reviewen
    - Feedback geben zu:
-     - Code-Qualität
+     - Code-QualitÃ¤t
      - Best Practices
      - Performance
      - Sicherheit
 
 3. **Merge**
    - Nach Approval durch Maintainer
-   - Branch wird automatisch gelöscht
+   - Branch wird automatisch gelÃ¶scht
 
 ## Git-Workflow
 
@@ -271,16 +271,16 @@ GitHub Actions erstellt automatisch einen Release mit Changelog.
 
 ```bash
 # Repository klonen
-git clone https://github.com/your-username/isgb-docker.git
+git clone https://github.com/baca89/isgb-docker.git
 cd isgb-docker
 
 # Docker bauen
 docker build -t isgb:dev .
 
-# Tests durchführen
+# Tests durchfÃ¼hren
 docker-compose up -d
 
-# Änderungen machen...
+# Ã„nderungen machen...
 
 # Wieder bauen
 docker-compose build --no-cache
@@ -289,14 +289,14 @@ docker-compose up -d
 
 ## Support
 
-- **Fragen**: Öffne ein [GitHub Discussion](https://github.com/your-username/isgb-docker/discussions)
-- **Bugs**: [GitHub Issues](https://github.com/your-username/isgb-docker/issues)
+- **Fragen**: Ã–ffne ein [GitHub Discussion](https://github.com/baca89/isgb-docker/discussions)
+- **Bugs**: [GitHub Issues](https://github.com/baca89/isgb-docker/issues)
 - **Sicherheit**: Email an [security@example.com](mailto:security@example.com)
 
 ## Lizenz
 
-Indem du zu diesem Projekt beiträgst, stimmst du zu dass dein Code unter der MIT-Lizenz veröffentlicht wird.
+Indem du zu diesem Projekt beitrÃ¤gst, stimmst du zu dass dein Code unter der MIT-Lizenz verÃ¶ffentlicht wird.
 
 ---
 
-**Danke dass du hilfst dieses Projekt zu verbessern!** 🎉
+**Danke dass du hilfst dieses Projekt zu verbessern!** ðŸŽ‰

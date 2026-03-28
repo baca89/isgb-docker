@@ -1,4 +1,4 @@
-# isGB Spamfilter Docker Image
+﻿# isGB Spamfilter Docker Image
 FROM debian:bookworm-slim
 
 LABEL maintainer="isbg@bauerc.eu"
@@ -22,9 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /opt/isgb
 
 # Klone oder installiere isGB
-# Ersetze mit der tatsächlichen isGB-Installation
+# Ersetze mit der tatsÃ¤chlichen isGB-Installation
 # hadolint ignore=DL3013
-RUN git clone https://github.com/your-username/isgb.git . || \
+RUN git clone https://github.com/baca89/isgb.git . || \
     pip3 install --no-cache-dir isgb
 
 # Erstelle Config-Verzeichnis mit korrekten Berechtigungen

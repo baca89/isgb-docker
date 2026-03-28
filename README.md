@@ -1,17 +1,17 @@
-# isGB Spam Filter Docker Image
+﻿# isGB Spam Filter Docker Image
 
-Ein professionelles Docker-Image für **isGB Spamfilter** mit Support für mehrere Postfächer über gemountete Config-Dateien.
+Ein professionelles Docker-Image fÃ¼r **isGB Spamfilter** mit Support fÃ¼r mehrere PostfÃ¤cher Ã¼ber gemountete Config-Dateien.
 
 ## Features
 
-- 🐳 **Docker-basiert**: Einfaches Deployment und portables Setup
-- 📧 **Multi-Mailbox-Support**: Unterstütze unbegrenzte Postfächer
-- 📁 **Config-Volumes**: Externe Konfigurationsdateien pro Postfach
-- 🔄 **GitHub Actions CI/CD**: Automatisches Bauen und Release
-- 🔒 **Sicherheit**: Non-root Benutzer, Security Scanning mit Trivy
-- 📊 **Logging**: Strukturiertes Logging mit verschiedenen Log-Levels
-- ❤️ **Health Checks**: Container-Health-Monitoring
-- 🎯 **Maschinelles Lernen**: Bayessche Spam-Filterung mit Auto-Learning
+- ðŸ³ **Docker-basiert**: Einfaches Deployment und portables Setup
+- ðŸ“§ **Multi-Mailbox-Support**: UnterstÃ¼tze unbegrenzte PostfÃ¤cher
+- ðŸ“ **Config-Volumes**: Externe Konfigurationsdateien pro Postfach
+- ðŸ”„ **GitHub Actions CI/CD**: Automatisches Bauen und Release
+- ðŸ”’ **Sicherheit**: Non-root Benutzer, Security Scanning mit Trivy
+- ðŸ“Š **Logging**: Strukturiertes Logging mit verschiedenen Log-Levels
+- â¤ï¸ **Health Checks**: Container-Health-Monitoring
+- ðŸŽ¯ **Maschinelles Lernen**: Bayessche Spam-Filterung mit Auto-Learning
 
 ## Voraussetzungen
 
@@ -24,22 +24,22 @@ Ein professionelles Docker-Image für **isGB Spamfilter** mit Support für mehre
 ### 1. Repository klonen
 
 ```bash
-git clone https://github.com/your-username/isgb-docker.git
+git clone https://github.com/baca89/isgb-docker.git
 cd isgb-docker
 ```
 
 ### 2. Konfiguration erstellen
 
-Kopiere die Beispiel-Konfiguration für jedes Postfach:
+Kopiere die Beispiel-Konfiguration fÃ¼r jedes Postfach:
 
 ```bash
-# Für Postfach 1
+# FÃ¼r Postfach 1
 cp config/example.conf config/user1@example.com.conf
-# Für Postfach 2
+# FÃ¼r Postfach 2
 cp config/example.conf config/user2@example.com.conf
 ```
 
-Bearbeite die Config-Dateien und füge deine Anmeldedaten ein:
+Bearbeite die Config-Dateien und fÃ¼ge deine Anmeldedaten ein:
 
 ```bash
 nano config/user1@example.com.conf
@@ -78,13 +78,13 @@ docker logs -f isgb-spamfilter
 
 ```
 config/
-├── example.conf                    # Beispiel-Template
-├── user1@example.com.conf         # Postfach 1
-├── user2@example.com.conf         # Postfach 2
-└── user3@example.com.conf         # Postfach 3
+â”œâ”€â”€ example.conf                    # Beispiel-Template
+â”œâ”€â”€ user1@example.com.conf         # Postfach 1
+â”œâ”€â”€ user2@example.com.conf         # Postfach 2
+â””â”€â”€ user3@example.com.conf         # Postfach 3
 ```
 
-Jede `.conf`-Datei repräsentiert ein zu filtrendes Postfach.
+Jede `.conf`-Datei reprÃ¤sentiert ein zu filtrendes Postfach.
 
 ### Wichtige Config-Optionen
 
@@ -109,7 +109,7 @@ enable_dmarc_check = true
 
 [actions]
 move_to_folder = Spam                # Verschiebe in Spam-Ordner
-delete_threshold = 8.0               # Lösche bei hohem Score
+delete_threshold = 8.0               # LÃ¶sche bei hohem Score
 mark_as_read = false
 ```
 
@@ -134,7 +134,7 @@ Setze die folgenden Variablen im `docker-compose.yml` oder per `-e`:
 
 ## Health Check
 
-Der Container verfügt über einen automatischen Health Check:
+Der Container verfÃ¼gt Ã¼ber einen automatischen Health Check:
 
 ```bash
 docker ps  # Status ansehen
@@ -151,18 +151,18 @@ docker exec isgb-spamfilter curl -f http://localhost:8080/health
 
 ### 1. Docker Build & Push (`docker-build-push.yml`)
 
-Wird bei jedem Push zu `main` oder `develop` oder bei neuen Tags ausgelöst:
+Wird bei jedem Push zu `main` oder `develop` oder bei neuen Tags ausgelÃ¶st:
 
 - Baut das Docker-Image
 - Pushed zu GitHub Container Registry (ghcr.io)
-- Führt Vulnerability Scanning durch (Trivy)
+- FÃ¼hrt Vulnerability Scanning durch (Trivy)
 - Generiert automatische Tags basierend auf Branches/Tags
 
 **Automatische Tags:**
-- `latest` für main-Branch
-- `develop` für develop-Branch
-- `v1.0.0` für Version-Tags
-- `SHA` für Commits
+- `latest` fÃ¼r main-Branch
+- `develop` fÃ¼r develop-Branch
+- `v1.0.0` fÃ¼r Version-Tags
+- `SHA` fÃ¼r Commits
 
 ### 2. Release Workflow (`release.yml`)
 
@@ -170,7 +170,7 @@ Aktiviert bei Push von Git-Tags (Format: `v*.*.*`):
 
 - Erstellt automatisch GitHub Release
 - Generiert Changelog aus Git-History
-- Veröffentlicht Release Notes
+- VerÃ¶ffentlicht Release Notes
 - Verlinkt Docker-Image
 
 **Neuen Release erstellen:**
@@ -228,21 +228,21 @@ docker-compose logs isgb > logs.txt
 
 ### Best Practices
 
-1. **App-Passwörter verwenden**
+1. **App-PasswÃ¶rter verwenden**
    - Verwende kein Hauptpasswort
-   - Generiere App-spezifische Passwörter bei Gmail, Outlook, etc.
+   - Generiere App-spezifische PasswÃ¶rter bei Gmail, Outlook, etc.
 
 2. **Secrets Management**
    - Config-Dateien nicht ins Git
    - Verwende `.env` oder Docker Secrets
-   - Verwende GitHub Secrets für CI/CD
+   - Verwende GitHub Secrets fÃ¼r CI/CD
 
 3. **Berechtigungen**
    - Config-Verzeichnis: readonly mounten
    - Betreibt als non-root Benutzer (isgb:isgb)
 
 4. **Container Security**
-   - Sicherheits-Updates: `docker pull` regelmäßig
+   - Sicherheits-Updates: `docker pull` regelmÃ¤ÃŸig
    - Vulnerability Scanning: Trivy-Scans vor Produktion
    - Resource Limits: CPU und Memory limitieren
 
@@ -265,14 +265,14 @@ trivy image isgb:test
 # Logs ansehen
 docker-compose logs isgb
 
-# Manual entrypoint für Debugging
+# Manual entrypoint fÃ¼r Debugging
 docker run -it --entrypoint /bin/bash isgb:latest
 ```
 
 ### Config-Fehler
 
 ```bash
-# Validierung durchführen
+# Validierung durchfÃ¼hren
 docker-compose exec isgb validate
 
 # Config suchen
@@ -308,23 +308,23 @@ docker-compose logs isgb | grep ERROR
 
 ```
 isgb-docker/
-├── Dockerfile                     # Docker Image Definition
-├── docker-compose.yml             # Docker Compose für Entwicklung
-├── .dockerignore
-├── .gitignore
-├── scripts/
-│   └── entrypoint.sh             # Container Entrypoint
-├── config/
-│   └── example.conf              # Beispiel-Konfiguration
-├── docs/
-│   ├── INSTALLATION.md
-│   ├── CONFIGURATION.md
-│   └── TROUBLESHOOTING.md
-├── .github/
-│   └── workflows/
-│       ├── docker-build-push.yml # CI/CD für Builds
-│       └── release.yml            # Release Automation
-└── README.md
+â”œâ”€â”€ Dockerfile                     # Docker Image Definition
+â”œâ”€â”€ docker-compose.yml             # Docker Compose fÃ¼r Entwicklung
+â”œâ”€â”€ .dockerignore
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ scripts/
+â”‚   â””â”€â”€ entrypoint.sh             # Container Entrypoint
+â”œâ”€â”€ config/
+â”‚   â””â”€â”€ example.conf              # Beispiel-Konfiguration
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ INSTALLATION.md
+â”‚   â”œâ”€â”€ CONFIGURATION.md
+â”‚   â””â”€â”€ TROUBLESHOOTING.md
+â”œâ”€â”€ .github/
+â”‚   â””â”€â”€ workflows/
+â”‚       â”œâ”€â”€ docker-build-push.yml # CI/CD fÃ¼r Builds
+â”‚       â””â”€â”€ release.yml            # Release Automation
+â””â”€â”€ README.md
 ```
 
 ### Testing
@@ -352,7 +352,7 @@ v1.1.1    - Bug Fixes
 v2.0.0    - Breaking Changes
 ```
 
-### Version ändern
+### Version Ã¤ndern
 
 1. Update `Dockerfile` Label
 2. Tag erstellen: `git tag v1.1.0`
@@ -387,11 +387,11 @@ worker_threads = 4
 cache_size = 1000
 ```
 
-## Support & Beiträge
+## Support & BeitrÃ¤ge
 
-- **Issues**: Melde Bugs auf [GitHub Issues](https://github.com/your-username/isgb-docker/issues)
+- **Issues**: Melde Bugs auf [GitHub Issues](https://github.com/baca89/isgb-docker/issues)
 - **PRs**: Wilkommen! Bitte lese [CONTRIBUTING.md](CONTRIBUTING.md)
-- **Diskussionen**: [GitHub Discussions](https://github.com/your-username/isgb-docker/discussions)
+- **Diskussionen**: [GitHub Discussions](https://github.com/baca89/isgb-docker/discussions)
 
 ## Lizenz
 
@@ -404,4 +404,4 @@ MIT - Siehe [LICENSE](LICENSE)
 
 ---
 
-**Zuletzt aktualisiert**: 28. März 2026
+**Zuletzt aktualisiert**: 28. MÃ¤rz 2026
