@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     libffi-dev \
     spamassassin \
+    spamd \
     cron \
     && rm -rf /var/lib/apt/lists/* \
     && command -v spamd > /dev/null || (echo "ERROR: spamd nicht nach apt-install gefunden" && exit 1)
