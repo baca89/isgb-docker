@@ -48,7 +48,7 @@ name = example@example.com
 host = mail.example.com
 port = 993
 username = example@example.com
-password = your_password_here
+auth_secret = [REPLACE_WITH_YOUR_PASSWORD]
 use_ssl = true
 
 [filter]

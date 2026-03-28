@@ -123,7 +123,7 @@ enabled = true
 host = mail.example.com           # z.B. imap.gmail.com
 port = 993                        # Standard IMAP/SSL
 username = user1@example.com
-password = your_app_password      # WICHTIG: App-Passwort!
+auth_secret = [REPLACE_WITH_YOUR_APP_PASSWORD]  # App-Passwort!
 use_ssl = true
 ```
 

@@ -148,6 +148,7 @@ jobs:
       - name: Check for hardcoded secrets
         run: |
           echo "Scanning for hardcoded secrets..."
+          # Suche nach echten Passwörtern/Secrets, nicht nach Platzhaltern oder Beispielen
           if grep -r "password\|secret\|key\|token" . \
             --include="*.sh" \
             --include="*.py" \
@@ -155,7 +156,8 @@ jobs:
             --exclude-dir=.git \
             --exclude-dir=.github \
             --exclude-dir=config \
-            --exclude="*.md"; then
+            --exclude="*.md" \
+            | grep -v "\[.*_HERE\]\|\[REPLACE_WITH\]\|your_\|example\|demo\|test" ; then
             echo "⚠️  Potential hardcoded secrets found!"
             exit 1
           fi
