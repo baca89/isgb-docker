@@ -74,9 +74,16 @@ case "${1:-start}" in
         log_info "Starte isGB Spamfilter..."
         
         # Validiere alle Config-Dateien
-        # Starte SpamAssassin Daemon
+        # Starte SpamAssassin Daemon (Pfad dynamisch ermitteln)
         log_info "Starte SpamAssassin Daemon (spamd)..."
-        if /usr/sbin/spamd --daemonize --pidfile=/var/run/spamd.pid --max-children=5; then
+        SPAMD_BIN=$(command -v spamd 2>/dev/null || true)
+        if [ -z "${SPAMD_BIN}" ]; then
+            log_error "spamd nicht gefunden. Image neu bauen und Container neu starten:"
+            log_error "  docker compose build --no-cache && docker compose up -d"
+            exit 1
+        fi
+        log_info "spamd gefunden: ${SPAMD_BIN}"
+        if "${SPAMD_BIN}" --daemonize --pidfile=/var/run/spamd.pid --max-children=5; then
             log_info "SpamAssassin Daemon gestartet."
         else
             log_error "SpamAssassin Daemon konnte nicht gestartet werden!"

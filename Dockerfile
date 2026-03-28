@@ -18,7 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     spamassassin \
     cron \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && command -v spamd > /dev/null || (echo "ERROR: spamd nicht nach apt-install gefunden" && exit 1)
 
 # Erstelle Arbeitsverzeichnis
 WORKDIR /opt/isgb
