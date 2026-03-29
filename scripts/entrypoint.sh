@@ -20,19 +20,12 @@ log_warn() {
 
 touch /INIT
 
-if [ "$(ps axf | grep -c -E "[r]syslog(d)?")" -eq 0 ]; then
-  if command -v rsyslogd >/dev/null 2>&1; then
-    rsyslogd || log_warn "rsyslogd konnte nicht gestartet werden"
-  elif [ -x /etc/init.d/rsyslog ]; then
-    /etc/init.d/rsyslog start || log_warn "rsyslog init-Skript fehlgeschlagen"
-  else
-    log_warn "Kein rsyslog Startkommando gefunden; fahre ohne rsyslog fort"
-  fi
-fi
+# rsyslog is optional in containers and often cannot read /proc/kmsg without extra caps.
+log_info "Überspringe rsyslog-Start im Containerbetrieb"
 
 if [ "$(ps axf | grep -c -E "[s]pamd")" -eq 0 ]; then
   if command -v spamd >/dev/null 2>&1; then
-    spamd -d --pidfile /run/spamd.pid || log_warn "spamd konnte nicht gestartet werden"
+    spamd -d --pidfile /run/spamd.pid --syslog=stderr || log_warn "spamd konnte nicht gestartet werden"
   elif [ -x /etc/init.d/spamassassin ]; then
     /etc/init.d/spamassassin start || log_warn "spamassassin init-Skript fehlgeschlagen"
   else
@@ -43,10 +36,10 @@ fi
 while true; do
   
     if [ -f /INIT ]; then
-        sa-learn.sh --force-expire -D
+      /etc/cron.daily/sa_learn.sh --force-expire -D || log_warn "sa-learn Initiallauf fehlgeschlagen"
 
-        sa-update --nogpg --channel spamassassin.heinleich-suppoer.de
-        sa-update
+      sa-update --nogpg --channel spamassassin.heinlein-support.de || log_warn "sa-update (Heinlein-Channel) fehlgeschlagen"
+      sa-update || log_warn "sa-update fehlgeschlagen"
 
 
         rm /INIT
@@ -63,7 +56,7 @@ while true; do
         --learnspambox="$INBOX" \
         --learnhambox="$HAMBOX" \
         --learnthendestroy \
-        --noninteractive
+        --noninteractive || log_warn "isbg teachonly Durchlauf fehlgeschlagen"
 
     isbg \
         --flag \
@@ -72,9 +65,9 @@ while true; do
         --imapuser="$MAILUSER" \
         --imappass="$MAILPASS" \
         --use-ssl="$MAILSSL" \
-        --imapinbix="$INBOX" \
+        --imapinbox="$INBOX" \
         --imapspambox="$SPAMBOX" \
-        --noninteractive
+        --noninteractive || log_warn "isbg flag Durchlauf fehlgeschlagen"
 
     sleep 60
 
