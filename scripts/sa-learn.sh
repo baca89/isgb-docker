@@ -1,65 +1,65 @@
 #!/bin/bash
-# SpamAssassin Lernlauf für isGB
-# Wird beim Containerstart und täglich um 02:00 Uhr via Cron ausgeführt.
-#
-# Lerndaten ablegen in:
-#   Spam: /var/lib/isgb/spam/  (mbox-Dateien oder Maildir-Verzeichnisse)
-#   Ham:  /var/lib/isgb/ham/   (mbox-Dateien oder Maildir-Verzeichnisse)
-# Pfade können über Umgebungsvariablen SA_SPAM_DIR / SA_HAM_DIR überschrieben werden.
 
-SPAM_DIR="${SA_SPAM_DIR:-/var/lib/isgb/spam}"
-HAM_DIR="${SA_HAM_DIR:-/var/lib/isgb/ham}"
-LOG_DIR="${LOG_DIR:-/var/log/isgb}"
-LOG_FILE="${LOG_DIR}/sa-learn.log"
+# Skript: sa-learn.sh
+# Daily Spamassasin Training-Job for ISGB Docker Container
 
-mkdir -p "${LOG_DIR}"
+CRON=1
 
-log() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [SA-LEARN] $*" | tee -a "${LOG_FILE}"
+test -f /etc/default/spamassassin && . /etc/default/spamassassin
+test -x /usr/bin/sa-update || exit 0
+test -x /etc/init.d/spamassassin || exit 0
+
+if [ "$CRON" -eq 0 ]; then
+    exit 0
+fi
+
+die_with_lint(){
+    su - debian-spamd -c "spamassassin --lint 2>&1"
+    exit 1
 }
 
-# Prüft ob ein Verzeichnis mindestens eine Datei enthält
-dir_has_files() {
-    [ -d "$1" ] && [ -n "$(find "$1" -mindepth 1 -maxdepth 1 2>/dev/null | head -1)" ]
+do_compile(){
+    if [-x /usr/bin/re2c -a -x /usr/bin/sa-compile ]; then
+        su - debian-spamd -c "sa-compile --quiet"
+        chmod -R go-w,go+rX /var/lib/spamassassin/compiled
+    fi
 }
 
-log "=== Starte SpamAssassin Lernlauf ==="
-learned=0
-
-if dir_has_files "${SPAM_DIR}"; then
-    log "Lerne Spam aus: ${SPAM_DIR}"
-    if sa-learn --spam "${SPAM_DIR}" >> "${LOG_FILE}" 2>&1; then
-        learned=1
-        log "Spam-Training erfolgreich abgeschlossen."
+reload(){
+    if which invoke-rc.d > /dev/null 2>&1; then
+        invoke-rc.d spamassassin reload > /dev/null
     else
-        log "WARNUNG: sa-learn --spam schlug fehl"
+        /etc/init.d/spamassassin reload > /dev/null
     fi
-else
-    log "Spam-Verzeichnis leer/nicht vorhanden: ${SPAM_DIR}"
-fi
-
-if dir_has_files "${HAM_DIR}"; then
-    log "Lerne Ham aus: ${HAM_DIR}"
-    if sa-learn --ham "${HAM_DIR}" >> "${LOG_FILE}" 2>&1; then
-        learned=1
-        log "Ham-Training erfolgreich abgeschlossen."
-    else
-        log "WARNUNG: sa-learn --ham schlug fehl"
+    if [ -d /etc/spamassassin/sa-update-hooks.d ]; then
+        run-parts --lsbsysinit /etc/spamassassin/sa-update-hooks.d
     fi
-else
-    log "Ham-Verzeichnis leer/nicht vorhanden: ${HAM_DIR}"
-fi
+}
 
-if [ "${learned}" -eq 1 ]; then
-    log "Synchronisiere Bayes-Datenbank..."
-    if ! sa-learn --sync >> "${LOG_FILE}" 2>&1; then
-        log "WARNUNG: sa-learn --sync schlug fehl"
-    fi
-    log "Lernlauf und Datenbanksynchronisierung abgeschlossen."
-else
-    log "Keine Lerndaten vorhanden. Lerndateien ablegen in:"
-    log "  Spam: ${SPAM_DIR}"
-    log "  Ham:  ${HAM_DIR}"
-fi
+# sleep for 3600 seconds
+RANGE=3600
+number='od -vAn -N2 -tu4 </dev/urandom'
+number='expr $number % $RANGE'
+sleep $number
 
-log "=== Lernlauf beendet ==="
+#update
+unmask 022
+su - debiam-spamd -c "sa-update --gpghomedir /var/lib/spamassassin/sa-update-keys"
+su - debian-spamd -c "sa-update --nogpg --channel spamassassin.heinleich-suppoer.de"
+
+case $? in
+    0)
+        su - debian-spamd -c "spamassassin --lint" || die_with_lint
+        do_compile
+        reload
+        ;;
+    1)
+        exit 0
+        ;;
+    2)
+        die_with_lint
+        ;;
+    *)
+        echo "sa-update failed with unknown error code $?"
+        ;;
+esac
