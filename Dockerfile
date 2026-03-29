@@ -31,6 +31,6 @@ RUN pip3 install --upgrade pip && \
 COPY user_prefs /root/.spamassassin/user_prefs
 COPY default_spamassassin /etc/default/spamassassin
 COPY scripts/entrypoint.sh /entrypoint.sh
-COPY scripts/sa_learn.sh /etc/cron.daily/sa_learn
+COPY scripts\sa-learn.sh /etc/cron.daily/sa_learn.sh
 
 CMD cron && bash /entrypoint.sh
