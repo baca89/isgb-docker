@@ -3,7 +3,7 @@
 LABEL maintainer="isbg@bauerc.eu"
 LABEL description="Docker image for ISBG (Intelligent Spamfilter für Gmail) with integrated SpamAssassin Daemon (spamd) and Cron for scheduled learning."
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Berlin
 
 #dependencies
@@ -31,6 +31,6 @@ RUN pip3 install --upgrade pip && \
 COPY user_prefs /root/.spamassassin/user_prefs
 COPY default_spamassassin /etc/default/spamassassin
 COPY scripts/entrypoint.sh /entrypoint.sh
-COPY scripts\sa-learn.sh /etc/cron.daily/sa_learn.sh
+COPY scripts/sa-learn.sh /etc/cron.daily/sa_learn.sh
 
-CMD cron && bash /entrypoint.sh
+CMD ["sh", "-c", "cron && bash /entrypoint.sh"]
