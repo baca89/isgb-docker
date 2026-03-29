@@ -21,8 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     rsyslog
     
-RUN pip3 install --break-system-packages --upgrade pip && \
-    pip3 install --break-system-packages isbg && \
+RUN pip3 install --break-system-packages --no-cache-dir isbg && \
     mkdir /root/.spamassassin && \
     apt-get autoremove --purge -y && \
     apt-get clean && \
