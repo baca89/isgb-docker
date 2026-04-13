@@ -1,4 +1,4 @@
-﻿name: Create Release
+name: Create Release
 
 on:
   push:
@@ -75,7 +75,7 @@ jobs:
           prerelease: false
 
       - name: Comment on discussion
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         if: always()
         with:
           script: |
